@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { BASE_URL } from '../constants/variables';
+import { URLS } from '../constants/variables';
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: URLS.BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -19,8 +19,9 @@ export class HTTPService {
     return new Promise((resolve, reject) => {
       axiosInstance.get(url, { params: params })
         .then(response => {
-          if (response.status === 200)
+          if (response.status === 200) {
             resolve(response.data)
+          }
         })
         .catch((error) => reject(error))
     })
@@ -30,20 +31,17 @@ export class HTTPService {
     return new Promise((resolve, reject) => {
       axiosInstance.put(url, body)
         .then(response => {
-          if (response.status === 200)
-            resolve(response.data)
+          resolve(response)
         })
         .catch((error) => reject(error))
     })
   }
 
   static post(url, body) {
-    return new Promise((resolve, reject) => {      
+    return new Promise((resolve, reject) => {
       axiosInstance.post(url, body)
         .then(response => {
-          if (response.status === 200) {
-            resolve(response.data)
-          }
+          resolve(response)
         })
         .catch((error) => reject(error))
     })
@@ -53,9 +51,7 @@ export class HTTPService {
     return new Promise((resolve, reject) => {
       axiosInstance.delete(url)
         .then(response => {
-          if (response.status === 200) {
-            resolve(response.data)
-          }
+          resolve(response)
         })
         .catch((error) => reject(error))
     })

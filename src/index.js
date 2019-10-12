@@ -1,8 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import ToDo from './App';
+import { store } from './app/config/store';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+
+const App = () => <Provider store={store}>
+  <ToDo />
+</Provider>
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
