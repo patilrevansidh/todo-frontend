@@ -4,7 +4,8 @@ import {
   FETCHING_BUCKET, FETCH_BUCKET_FAIL, FETCH_BUCKET_SUCCESS,
   FETCHING_TODOS, TODO_FETCH_FAIL, TODO_FETCH_SUCCESS,
   ADDING_TODO, TODO_ADD_FAIL, TODO_ADDED,
-  UPDATING_TODO, TODO_UPDATE_FAIL, TODO_UPDATED
+  UPDATING_TODO, TODO_UPDATE_FAIL, TODO_UPDATED,
+  BUCKET_ADDED, ADDING_BUCKET, ADD_BUCKET_FAIL
 
 } from './types';
 
@@ -24,7 +25,7 @@ export function fetchingTodos() {
   return async (dispatchEvent) => {
     try {
       dispatchEvent({ type: FETCHING_TODOS })
-      const {data} = await HTTPService.get(URLS.TODOS);
+      const { data } = await HTTPService.get(URLS.TODOS);
       dispatchEvent({ type: TODO_FETCH_SUCCESS, todos: data })
     } catch (error) {
       dispatchEvent({ type: TODO_FETCH_FAIL, error })
@@ -54,5 +55,11 @@ export function updateTodo(payload) {
     } catch (error) {
       dispatchEvent({ type: TODO_UPDATE_FAIL, error })
     }
+  }
+};
+
+export function addBucket(bucket) {
+  return async (dispatchEvent) => {    
+    dispatchEvent({ type: BUCKET_ADDED, bucket })
   }
 };

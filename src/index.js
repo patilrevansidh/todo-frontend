@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import ToDo from './App';
 import { store } from './app/config/store';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
+import 'antd/dist/antd.css';
+
 
 const App = () => <Provider store={store}>
   <ToDo />
