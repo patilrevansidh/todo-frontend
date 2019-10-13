@@ -19,7 +19,7 @@ const trailing = {
 class TodoForm extends Component {
   state = {
     bucket: '', title: '', description: '',
-    search: '', isDone: false, error:''
+    search: '', isDone: false, error: ''
   };
 
   handleChange = (bucket) => {
@@ -32,9 +32,9 @@ class TodoForm extends Component {
 
   addNewBucket = async (title) => {
     try {
-      const bucket = await HTTPService.post(URLS.BUCKET, { title })
-      this.props.addBucket(bucket.data)
-      return bucket;
+      const response = await HTTPService.post(URLS.BUCKET, { title })
+      this.props.addBucket(response.data)
+      return response.data;
     } catch (error) {
       this.setState({ error });
     }
@@ -47,17 +47,16 @@ class TodoForm extends Component {
       newBucket = await this.addNewBucket(this.state.bucket);
     }
     const payload = {
-      title: this.state.title,
-      description: this.state.description,
+      title: this.state.title, description: this.state.description,
       bucket: isBucket || newBucket._id
     }
-    console.log('*** PAYLOAD ***', payload)
+    return payload;
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = this.getTodoPayload()
-    // this.props.addTodo(payload)
+    const payload = await this.getTodoPayload()
+    this.props.addTodo(payload)
   }
 
   getOptions = () => {

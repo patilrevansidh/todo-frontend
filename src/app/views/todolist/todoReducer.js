@@ -1,8 +1,7 @@
 import {
-  TOGGLE_FORM, FETCHING_BUCKET, FETCH_BUCKET_SUCCESS, FETCH_BUCKET_FAIL,
-  FETCHING_TODOS, TODO_FETCH_FAIL, TODO_FETCH_SUCCESS,
-  TODO_ADDED, ADDING_TODO, TODO_ADD_FAIL,
-  ADDING_BUCKET, ADD_BUCKET_FAIL, BUCKET_ADDED
+  ADDING_BUCKET, ADDING_TODO, BUCKET_ADDED, FETCHING_BUCKET, FETCHING_TODOS,
+  FETCH_BUCKET_FAIL, FETCH_BUCKET_SUCCESS, TODO_ADDED, TODO_ADD_FAIL, TODO_FETCH_FAIL,
+  TODO_FETCH_SUCCESS
 } from './action/types';
 
 const initState = {
@@ -26,18 +25,18 @@ export const todoState = (state = initState, action) => {
       return { ...state, bucketLoader: false, bucketError: action.error };
 
     case FETCHING_TODOS:
-      return { ...state, todos: [], todoLoader: true, todoError: null };
+      return { ...state, todoLoader: true, todoError: null };
     case TODO_FETCH_SUCCESS:
       return { ...state, todos: action.todos, todoLoader: false, };
     case TODO_FETCH_FAIL:
       return { ...state, todoLoader: false, todoError: action.error };
 
     case ADDING_TODO:
-      return { ...state, todos: action.todos, todoLoader: true };
+      return { ...state, todoLoader: true };
     case TODO_ADDED:
-      return { ...state, todos: [...action.todos, action.todo], todoLoader: false };
+      return { ...state, todos: [...state.todos, action.todo], todoLoader: false };
     case TODO_ADD_FAIL:
-      return { ...state, todos: action.todos, todoLoader: false, todoError: action.error };
+      return { ...state, todoLoader: false, todoError: action.error };
 
     case ADDING_BUCKET:
       return { ...state, bucketLoader: true, bucketError: null };
