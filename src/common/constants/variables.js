@@ -3,3 +3,8 @@ export const URLS = {
   BUCKET: 'bucket/',
   TODOS: 'todo/'
 }
+
+export const todoTableHeader = [
+  { title: 'Title', dataIndex: 'title' },
+  { title: 'Description', dataIndex: 'description' }
+];

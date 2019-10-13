@@ -17,10 +17,18 @@ const trailing = {
 }
 
 class TodoForm extends Component {
-  state = {
-    bucket: '', title: '', description: '',
-    search: '', isDone: false, error: ''
-  };
+  constructor(props){
+    super(props);
+    this.state = this.getState();
+  }
+
+  getState = () => {
+    const { bucket, title, description, isDone } = this.props;
+    return {
+      bucket: bucket && bucket._id || '', title: title || '', description: description || '',
+      search: '', isDone: isDone || false, error: ''
+    }
+  }
 
   handleChange = (bucket) => {
     this.setState({ bucket });
