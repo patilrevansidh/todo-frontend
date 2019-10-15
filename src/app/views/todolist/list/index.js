@@ -7,8 +7,8 @@ import { HeaderButton } from '../../../../common/components/HeaderButton.js';
 import { TodoCard } from './TodoCard';
 import './list.scss'
 
-const TodoList = (props) => {
-  const handleAdd = () => props.history.push('/todo/add')
+const TodoList = ({ todos, history }) => {
+  const handleAdd = () => history.push('/todo/add')
   return (
     <>
       <HeaderButton title={'Todos List'}
@@ -24,8 +24,14 @@ const TodoList = (props) => {
           <Row gutter={8}>
             <div className='todo-card-row'>
               {
-                props.todos.map(item => <Col md={{ span: 8 }} sm={{ span: 12 }}>
-                  <div className='card-container'> <TodoCard todo={item} /> </div>
+                todos.map(todo => <Col md={{ span: 8 }} sm={{ span: 12 }}>
+                  <div className='card-container'>
+                    <TodoCard
+                      onView={() => history.push(`/todo/${todo._id}/view`)}
+                      onEdit={() => history.push(`/todo/${todo._id}/edit`)}
+                      onMark={() => console.log('**', todo)}
+                      todo={todo} />
+                  </div>
                 </Col>
                 )
               }

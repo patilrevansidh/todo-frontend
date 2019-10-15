@@ -7,17 +7,18 @@ export const TodoCard = ({ loading, todo, onMark, onEdit, onView }) => {
   const { title, description } = todo;
   return <Card style={{ width: '100%' }}
     actions={[
-      <Checkbox onMark={() => onMark(todo)}>isDone</Checkbox>,
+      <Checkbox onMark={onMark}>isDone</Checkbox>,
       <Tooltip title={TOOLTIP_MSG.EDIT}>
-        <Icon onClick={() => onEdit(todo)} type="edit" key="edit" />
+        <Icon onClick={onEdit} type="edit" key="edit" />
       </Tooltip>,
       <Tooltip title={TOOLTIP_MSG.VIEW}>
-        <Icon onClick={() => onView(todo)} type="eye" key="ellipsis" />
+        <Icon onClick={onView} type="eye" key="ellipsis" />
       </Tooltip>
     ]}
   >
     <Skeleton loading={loading} active>
       <Meta title={title} description={description} />
     </Skeleton>
+    <p className='bucket'>Bucket: {todo.bucket}</p>
   </Card>
 };
