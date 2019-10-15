@@ -27,8 +27,8 @@ const TodoList = ({ todos, history }) => {
                 todos.map(todo => <Col md={{ span: 8 }} sm={{ span: 12 }}>
                   <div className='card-container'>
                     <TodoCard
-                      onView={() => history.push(`/todo/${todo._id}/view`)}
-                      onEdit={() => history.push(`/todo/${todo._id}/edit`)}
+                      onView={() => history.push({ pathname: `/todo/${todo._id}/view`, state: { isView: true } })}
+                      onEdit={() => history.push({ pathname: `/todo/${todo._id}/edit`, state: { isEdit: true } })}
                       onMark={() => console.log('**', todo)}
                       todo={todo} />
                   </div>

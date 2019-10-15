@@ -14,3 +14,14 @@ export const TOOLTIP_MSG = {
   VIEW: 'Click To View Details',
   MARK: 'Click to Edit Todo'
 }
+
+export const FORM_TITLE = {
+  VIEW: 'ToDo Details',
+  ADD: 'Add Todo',
+  EDIT: 'Edit Todo'
+}
+
+export const BUTTON_TITLE = {
+  SUBMIT: 'Submit',
+  UPDATE: 'Update'
+}

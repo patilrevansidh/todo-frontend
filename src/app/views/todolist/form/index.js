@@ -1,11 +1,11 @@
+import { Button, Checkbox, Form, Input, Select } from 'antd';
 import React, { Component } from 'react';
-import { Button, Select, Input, Form, Checkbox, Row, Col } from 'antd';
 import { connect } from 'react-redux';
-import { addBucket, addTodo } from '../action/actions';
 import { TodoFormItem } from '../../../../common/components/FormItem';
-import { HTTPService } from '../../../../common/service/HTTPService';
-import { URLS } from '../../../../common/constants/variables';
 import { HeaderButton } from '../../../../common/components/HeaderButton';
+import { FORM_TITLE, URLS } from '../../../../common/constants/variables';
+import { HTTPService } from '../../../../common/service/HTTPService';
+import { addBucket, addTodo, updateTodo } from '../action/actions';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -24,10 +24,28 @@ class TodoForm extends Component {
   }
 
   getState = () => {
-    const { bucket, title, description, isDone } = this.props;
     return {
-      bucket: bucket && bucket._id || '', title: title || '',
-      description: description || '', search: '', isDone: isDone || false, error: ''
+      bucket: '', title: '', description: '', search: '', isDone: false, error: ''
+    }
+  }
+
+  componentDidMount() {
+    this.handleUpdateState()
+  }
+
+  handleUpdateState() {
+    const { selectedTodo } = this.props;
+    if (!selectedTodo) return;
+    let { title, bucket, description, isDone } = selectedTodo;
+    bucket = bucket && bucket._id
+    this.setState({ bucket, title, description, isDone: isDone || false });
+  }
+
+  componentDidUpdate(prevProps) {
+    const { selectedTodo } = this.props;
+    if (!selectedTodo) return;
+    if ((prevProps.selectedTodo === null && selectedTodo) || (prevProps.selectedTodo && prevProps.selectedTodo._id !== selectedTodo._id)) {
+      this.handleUpdateState()
     }
   }
 
@@ -55,12 +73,16 @@ class TodoForm extends Component {
       title: this.state.title, description: this.state.description,
       bucket: isBucket || newBucket._id
     }
+    if (this.props.isEdit || this.props.selectedTodo) {
+      payload._id = this.props.selectedTodo._id
+    }
     return payload;
   }
 
   handleSubmit = async (e) => {
     e.preventDefault();
     const payload = await this.getTodoPayload()
+    if (payload._id) { this.props.updateTodo(payload); return; }
     this.props.addTodo(payload)
   }
 
@@ -88,54 +110,68 @@ class TodoForm extends Component {
     }
     this.setState({ [name]: value });
   }
+
   handleBack = () => this.props.history.goBack()
 
   render() {
     const { options } = this.getOptions()
     const isDisabled = this.isValid();
-    const isEdit = false;
-    const title = false && 'Update Todod' || 'Add Todo';
+    const { isView, isEdit } = this.props;
+    const title = !isView && isEdit && FORM_TITLE.EDIT || FORM_TITLE.ADD || FORM_TITLE.VIEW;
+    console.log('this.props',this.props.selectedTodo)
     return (
       <>
-       <HeaderButton title={title} showIcon={false} showButton={true} onClick={this.handleBack} btnTitle={'Back'}/>
+        <HeaderButton title={title} showIcon={false} showButton={true} onClick={this.handleBack} btnTitle={'Back'} />
         <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
           <TodoFormItem isRequired={true} label="Bucket">
             <Select
+              disabled={isView} value={this.state.bucket}
               onSearch={this.handleSearch} mode='default' showSearch
               onBlur={() => this.handleSearch(null)} onChange={this.handleChange} >
               {options}
             </Select>
           </TodoFormItem>
           <TodoFormItem isRequired={true} label="Title">
-            <Input name='title'
+            <Input name='title' disabled={isView} value={this.state.title}
               onChange={this.handleTextChange}
               placeholder="Enter Todo Tile" />
           </TodoFormItem>
           <TodoFormItem label="Description" isRequired={true}>
-            <TextArea rows={4}
-              name='description'
+            <TextArea rows={4} disabled={isView} value={this.state.description}
+              name='description' disabled={isView}
               onChange={this.handleTextChange}
               placeholder="Enter Todo Descriptions" />
           </TodoFormItem>
           {isEdit && <TodoFormItem label='Status'>
-            <Checkbox name='isDone' onChange={this.handleTextChange}>isDone</Checkbox>
+            <Checkbox name='isDone' checked={this.state.isDone} onChange={this.handleTextChange}>isDone</Checkbox>
           </TodoFormItem>
           }
-          <Form.Item  {...trailing}>
-            <Button disabled={isDisabled} type="primary" htmlType="submit">
-              Submit
-          </Button>
-          </Form.Item>
+          {
+            !isView && <Form.Item  {...trailing}>
+              <Button disabled={isDisabled} type="primary" htmlType="submit">
+                {isEdit && 'Submit' || 'Update'}
+              </Button>
+            </Form.Item>
+          }
         </Form>
       </>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  buckets: state.todoState && state.todoState.buckets || [],
-  bucketLoader: state.todoState && state.todoState.bucketLoader,
-});
+function mapStateToProps(state, ownProps) {
+  const todosId = ownProps.match.params ? ownProps.match.params.id : null;
+  const todos = state.todoState && state.todoState.todos || [];
+  const buckets = state.todoState && state.todoState.buckets || [];
+  const isEdit = todosId && ownProps.match.path === "/todo/:id/edit" && true || false;
+  const isView = todosId && ownProps.match.path === "/todo/:id/view" && true || false;
+  return {
+    buckets,
+    bucketLoader: state.todoState && state.todoState.bucketLoader,
+    selectedTodo: todosId && todos.find(todo => todo._id == todosId) || null,
+    isEdit, isView,
+  }
+};
 
 const mapDispatchToProps = (dispatch) => ({
   addBucket: (bucket) => {
@@ -143,6 +179,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   addTodo: (payload) => {
     dispatch(addTodo(payload));
+  },
+  updateTodo: (payload) => {
+    dispatch(updateTodo(payload));
   }
 });
 

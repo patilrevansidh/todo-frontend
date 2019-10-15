@@ -50,7 +50,7 @@ export function updateTodo(payload) {
   return async (dispatchEvent) => {
     try {
       const urls = `${URLS.TODOS}${payload._id}`;
-      dispatchEvent({ type: ADDING_TODO })
+      dispatchEvent({ type: UPDATING_TODO })
       const todo = await HTTPService.post(URLS.TODOS, payload);
       dispatchEvent({ type: TODO_UPDATED, todo })
     } catch (error) {

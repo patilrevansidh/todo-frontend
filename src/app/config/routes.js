@@ -6,11 +6,11 @@ import TodoForm from '../views/todolist/form/';
 
 export const Routes = () => <div className='container'>
   <Router>
-    <Switch>      
+    <Switch>
       <Route exact path='/todo' component={TodoList} />
       <Route path='/todo/add' component={TodoForm} />
-      <Route path='/todo/:id/edit' component={TodoForm} />
-      <Route path='/todo/:id/view' component={TodoForm} />
+      <Route isEdit={true} path='/todo/:id/edit' component={TodoForm} />
+      <Route isView={true} path='/todo/:id/view' component={TodoForm} />
       <Route exact path="/" render={() => (
         <Redirect to='/todo' />
       )} />
