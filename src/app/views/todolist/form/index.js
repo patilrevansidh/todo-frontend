@@ -82,11 +82,12 @@ class TodoForm extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    const { history } = this.props;
     const payload = await this.getTodoPayload()
     if (payload._id) {
-      this.props.updateTodo(payload); return;
+      this.props.updateTodo(payload,history); return;
     }
-    this.props.addTodo(payload)
+    this.props.addTodo(payload, history)
   }
 
   getOptions = () => {
@@ -180,11 +181,11 @@ const mapDispatchToProps = (dispatch) => ({
   addBucket: (bucket) => {
     dispatch(addBucket(bucket));
   },
-  addTodo: (payload) => {
-    dispatch(addTodo(payload));
+  addTodo: (payload, history) => {
+    dispatch(addTodo(payload, history));
   },
-  updateTodo: (payload) => {
-    dispatch(updateTodo(payload));
+  updateTodo: (payload, history) => {
+    dispatch(updateTodo(payload,history));
   }
 });
 

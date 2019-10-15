@@ -33,26 +33,32 @@ export function fetchingTodos() {
   }
 };
 
-export function addTodo(payload) {
+export function addTodo(payload, history) {
   return async (dispatchEvent) => {
     try {
       const urls = `${URLS.TODOS}`;
       dispatchEvent({ type: ADDING_TODO })
       const response = await HTTPService.post(urls, payload);
       dispatchEvent({ type: TODO_ADDED, todo: response })
+      if (history) {
+        history.goBack();
+      }
     } catch (error) {
       dispatchEvent({ type: TODO_ADD_FAIL, error })
     }
   }
 };
 
-export function updateTodo(payload) {
+export function updateTodo(payload, history) {
   return async (dispatchEvent) => {
     try {
       const urls = `${URLS.TODOS}${payload._id}`;
       dispatchEvent({ type: UPDATING_TODO })
       const todo = await HTTPService.put(urls, payload);
       dispatchEvent({ type: TODO_UPDATED, todo })
+      if (history) {
+        history.goBack();
+      }
     } catch (error) {
       dispatchEvent({ type: TODO_UPDATE_FAIL, error })
     }
