@@ -7,7 +7,7 @@ export const TodoCard = ({ loading, todo, onMark, onEdit, onView }) => {
   const { title, description } = todo;
   return <Card style={{ width: '100%' }}
     actions={[
-      <Checkbox onMark={onMark}>isDone</Checkbox>,
+      <Checkbox checked={todo.isDone} onMark={onMark}>isDone</Checkbox>,
       <Tooltip title={TOOLTIP_MSG.EDIT}>
         <Icon onClick={onEdit} type="edit" key="edit" />
       </Tooltip>,
