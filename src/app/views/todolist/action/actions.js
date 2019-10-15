@@ -51,7 +51,7 @@ export function updateTodo(payload) {
     try {
       const urls = `${URLS.TODOS}${payload._id}`;
       dispatchEvent({ type: UPDATING_TODO })
-      const todo = await HTTPService.post(URLS.TODOS, payload);
+      const todo = await HTTPService.put(urls, payload);
       dispatchEvent({ type: TODO_UPDATED, todo })
     } catch (error) {
       dispatchEvent({ type: TODO_UPDATE_FAIL, error })

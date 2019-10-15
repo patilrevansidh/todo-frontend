@@ -31,7 +31,9 @@ export class HTTPService {
     return new Promise((resolve, reject) => {
       axiosInstance.put(url, body)
         .then(response => {
-          resolve(response)
+          if (response.status === 200) {
+            resolve(response.data)
+          }
         })
         .catch((error) => reject(error))
     })

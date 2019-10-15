@@ -71,9 +71,10 @@ class TodoForm extends Component {
     }
     const payload = {
       title: this.state.title, description: this.state.description,
-      bucket: isBucket || newBucket._id
+      bucket: isBucket._id || newBucket._id
     }
     if (this.props.isEdit || this.props.selectedTodo) {
+      payload.isDone = this.state.isDone;
       payload._id = this.props.selectedTodo._id
     }
     return payload;
@@ -82,7 +83,10 @@ class TodoForm extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const payload = await this.getTodoPayload()
-    if (payload._id) { this.props.updateTodo(payload); return; }
+    if (payload._id) {
+      this.props.updateTodo(payload); return;
+      console.log('payload', payload)
+    }
     this.props.addTodo(payload)
   }
 
@@ -104,6 +108,7 @@ class TodoForm extends Component {
   }
 
   handleTextChange = ({ target: { name, value, checked } }) => {
+
     if (name === 'isDone') {
       this.setState({ [name]: checked });
       return;
@@ -118,7 +123,6 @@ class TodoForm extends Component {
     const isDisabled = this.isValid();
     const { isView, isEdit } = this.props;
     const title = !isView && isEdit && FORM_TITLE.EDIT || FORM_TITLE.ADD || FORM_TITLE.VIEW;
-    console.log('this.props',this.props.selectedTodo)
     return (
       <>
         <HeaderButton title={title} showIcon={false} showButton={true} onClick={this.handleBack} btnTitle={'Back'} />

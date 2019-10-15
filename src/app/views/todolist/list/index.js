@@ -22,20 +22,24 @@ const TodoList = ({ todos, history }) => {
       <Row>
         <Col md={{ span: 16, offset: 3 }}>
           <Row gutter={8}>
-            <div className='todo-card-row'>
-              {
-                todos.map(todo => <Col md={{ span: 8 }} sm={{ span: 12 }}>
-                  <div className='card-container'>
-                    <TodoCard
-                      onView={() => history.push({ pathname: `/todo/${todo._id}/view`, state: { isView: true } })}
-                      onEdit={() => history.push({ pathname: `/todo/${todo._id}/edit`, state: { isEdit: true } })}
-                      onMark={() => console.log('**', todo)}
-                      todo={todo} />
-                  </div>
-                </Col>
-                )
-              }
-            </div >
+            {Array.isArray(todos) && todos.length > 0 &&
+              <div className='todo-card-row'>
+                {
+                  todos.map(todo => <Col md={{ span: 8 }} sm={{ span: 12 }}>
+                    <div className='card-container'>
+                      <TodoCard
+                        onView={() => history.push({ pathname: `/todo/${todo._id}/view`, state: { isView: true } })}
+                        onEdit={() => history.push({ pathname: `/todo/${todo._id}/edit`, state: { isEdit: true } })}
+                        onMark={() => console.log('**', todo)}
+                        todo={todo} />
+                    </div>
+                  </Col>
+                  )
+                }
+
+              </div >
+              || Array.isArray(todos) && todos.length == 0 && <Col md={{ span: 16 }} sm={{ span: 16 }}> No Todos </Col>
+            }
           </Row>
         </Col>
       </Row>
