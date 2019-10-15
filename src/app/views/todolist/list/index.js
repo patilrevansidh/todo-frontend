@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Table, Col, Row } from 'antd';
 import { TODO_HEADERS } from './tableHeaders.js';
@@ -7,8 +7,11 @@ import { HeaderButton } from '../../../../common/components/HeaderButton.js';
 import { TodoCard } from './TodoCard';
 import './list.scss'
 import { updateTodo } from '../action/actions.js';
+import { CardListView } from './CardListing';
+const VIEW = { TABLE: 'table', CARD: 'card' }
 
 const TodoList = ({ todos, history, updateTodoMark }) => {
+  const [listView, setListView] = useState(VIEW.TABLE)
   const handleAdd = () => history.push('/todo/add')
   return (
     <>
@@ -20,7 +23,7 @@ const TodoList = ({ todos, history, updateTodoMark }) => {
       {/* <Table dataSource={this.props.todos} columns={TODO_HEADERS} /> */}
       {/* </Col>
       </Row > */}
-      <Row>
+      {/* <Row>
         <Col md={{ span: 16, offset: 3 }}>
           <Row gutter={8}>
             {Array.isArray(todos) && todos.length > 0 &&
@@ -43,7 +46,8 @@ const TodoList = ({ todos, history, updateTodoMark }) => {
             }
           </Row>
         </Col>
-      </Row>
+      </Row> */}
+      <CardListView todos={todos} history={history} updateTodoMark={updateTodoMark} />
     </>
   );
 }
