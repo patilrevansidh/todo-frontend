@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import './App.css';
+import './App.scss';
 import { fetchBuckets, fetchingTodos } from './app/views/todolist/action/actions';
-import TodoForm from './app/views/todolist/form';
-import TodoList from './app/views/todolist/list/index';
+// import TodoForm from './app/views/todolist/form';
+// import TodoList from './app/views/todolist/list/index';
+import { Routes } from './app/config/routes';
 class App extends React.Component {
   componentDidMount() {
     const { fetchBuckets, fetchingTodos } = this.props;
@@ -11,14 +12,7 @@ class App extends React.Component {
     fetchingTodos();
   }
 
-  render() {
-    return (
-      <div className="container">
-        <TodoForm />
-        <TodoList />
-      </div>
-    );
-  }
+  render = () => <Routes/>
 }
 
 const mapDispatchToProps = (dispatch) => ({

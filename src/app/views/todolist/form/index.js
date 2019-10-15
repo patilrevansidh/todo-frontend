@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Select, Input, Form, Checkbox } from 'antd';
+import { Button, Select, Input, Form, Checkbox, Row, Col } from 'antd';
 import { connect } from 'react-redux';
 import { addBucket, addTodo } from '../action/actions';
 import { TodoFormItem } from '../../../../common/components/FormItem';
 import { HTTPService } from '../../../../common/service/HTTPService';
 import { URLS } from '../../../../common/constants/variables';
+import { HeaderButton } from '../../../../common/components/HeaderButton';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -14,10 +15,10 @@ const trailing = {
     xs: { span: 24, offset: 0 },
     sm: { span: 20, offset: 5 },
   },
-}
+};
 
 class TodoForm extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = this.getState();
   }
@@ -25,18 +26,14 @@ class TodoForm extends Component {
   getState = () => {
     const { bucket, title, description, isDone } = this.props;
     return {
-      bucket: bucket && bucket._id || '', title: title || '', description: description || '',
-      search: '', isDone: isDone || false, error: ''
+      bucket: bucket && bucket._id || '', title: title || '',
+      description: description || '', search: '', isDone: isDone || false, error: ''
     }
   }
 
-  handleChange = (bucket) => {
-    this.setState({ bucket });
-  }
+  handleChange = (bucket) => this.setState({ bucket });
 
-  handleSearch = (search) => {
-    this.setState({ search });
-  }
+  handleSearch = (search) => this.setState({ search });
 
   addNewBucket = async (title) => {
     try {
@@ -91,41 +88,46 @@ class TodoForm extends Component {
     }
     this.setState({ [name]: value });
   }
+  handleBack = () => this.props.history.goBack()
 
   render() {
     const { options } = this.getOptions()
     const isDisabled = this.isValid();
     const isEdit = false;
+    const title = false && 'Update Todod' || 'Add Todo';
     return (
-      <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
-        <TodoFormItem isRequired={true} label="Bucket">
-          <Select
-            onSearch={this.handleSearch} mode='default' showSearch
-            onBlur={() => this.handleSearch(null)} onChange={this.handleChange} >
-            {options}
-          </Select>
-        </TodoFormItem>
-        <TodoFormItem isRequired={true} label="Title">
-          <Input name='title'
-            onChange={this.handleTextChange}
-            placeholder="Enter Todo Tile" />
-        </TodoFormItem>
-        <TodoFormItem label="Description" isRequired={true}>
-          <TextArea rows={4}
-            name='description'
-            onChange={this.handleTextChange}
-            placeholder="Enter Todo Descriptions" />
-        </TodoFormItem>
-        {isEdit && <TodoFormItem label='Status'>
-          <Checkbox name='isDone' onChange={this.handleTextChange}>isDone</Checkbox>
-        </TodoFormItem>
-        }
-        <Form.Item  {...trailing}>
-          <Button disabled={isDisabled} type="primary" htmlType="submit">
-            Submit
+      <>
+       <HeaderButton title={title} showIcon={false} showButton={true} onClick={this.handleBack} btnTitle={'Back'}/>
+        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
+          <TodoFormItem isRequired={true} label="Bucket">
+            <Select
+              onSearch={this.handleSearch} mode='default' showSearch
+              onBlur={() => this.handleSearch(null)} onChange={this.handleChange} >
+              {options}
+            </Select>
+          </TodoFormItem>
+          <TodoFormItem isRequired={true} label="Title">
+            <Input name='title'
+              onChange={this.handleTextChange}
+              placeholder="Enter Todo Tile" />
+          </TodoFormItem>
+          <TodoFormItem label="Description" isRequired={true}>
+            <TextArea rows={4}
+              name='description'
+              onChange={this.handleTextChange}
+              placeholder="Enter Todo Descriptions" />
+          </TodoFormItem>
+          {isEdit && <TodoFormItem label='Status'>
+            <Checkbox name='isDone' onChange={this.handleTextChange}>isDone</Checkbox>
+          </TodoFormItem>
+          }
+          <Form.Item  {...trailing}>
+            <Button disabled={isDisabled} type="primary" htmlType="submit">
+              Submit
           </Button>
-        </Form.Item>
-      </Form>
+          </Form.Item>
+        </Form>
+      </>
     );
   }
 }
