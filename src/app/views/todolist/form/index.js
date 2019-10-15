@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TodoFormItem } from '../../../../common/components/FormItem';
 import { HeaderButton } from '../../../../common/components/HeaderButton';
-import { FORM_TITLE, URLS } from '../../../../common/constants/variables';
+import { FORM_TITLE, URLS, BUTTON_TITLE } from '../../../../common/constants/variables';
 import { HTTPService } from '../../../../common/service/HTTPService';
 import { addBucket, addTodo, updateTodo } from '../action/actions';
 
@@ -71,7 +71,7 @@ class TodoForm extends Component {
     }
     const payload = {
       title: this.state.title, description: this.state.description,
-      bucket: isBucket._id || newBucket._id
+      bucket: isBucket && isBucket._id || newBucket._id
     }
     if (this.props.isEdit || this.props.selectedTodo) {
       payload.isDone = this.state.isDone;
@@ -85,7 +85,6 @@ class TodoForm extends Component {
     const payload = await this.getTodoPayload()
     if (payload._id) {
       this.props.updateTodo(payload); return;
-      console.log('payload', payload)
     }
     this.props.addTodo(payload)
   }
@@ -122,7 +121,7 @@ class TodoForm extends Component {
     const { options } = this.getOptions()
     const isDisabled = this.isValid();
     const { isView, isEdit } = this.props;
-    const title = !isView && isEdit && FORM_TITLE.EDIT || FORM_TITLE.ADD || FORM_TITLE.VIEW;
+    const title = isEdit && FORM_TITLE.EDIT || isView && FORM_TITLE.VIEW || FORM_TITLE.ADD;
     return (
       <>
         <HeaderButton title={title} showIcon={false} showButton={true} onClick={this.handleBack} btnTitle={'Back'} />
@@ -153,7 +152,7 @@ class TodoForm extends Component {
           {
             !isView && <Form.Item  {...trailing}>
               <Button disabled={isDisabled} type="primary" htmlType="submit">
-                {isEdit && 'Submit' || 'Update'}
+                {isEdit && BUTTON_TITLE.UPDATE || BUTTON_TITLE.SUBMIT}
               </Button>
             </Form.Item>
           }

@@ -6,7 +6,8 @@ export function getTableData(data = []) {
       index,
       title: item.title,
       description: item.description,
-      bucket: item.bucket && item.bucket.title || ''
+      bucket: item.bucket && item.bucket.title || '',
+      bucketId: item.bucket && item.bucket._id || '',
     }
   })
 }

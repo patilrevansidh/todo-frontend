@@ -6,8 +6,9 @@ import { getTableData } from './util.js';
 import { HeaderButton } from '../../../../common/components/HeaderButton.js';
 import { TodoCard } from './TodoCard';
 import './list.scss'
+import { updateTodo } from '../action/actions.js';
 
-const TodoList = ({ todos, history }) => {
+const TodoList = ({ todos, history, updateTodoMark }) => {
   const handleAdd = () => history.push('/todo/add')
   return (
     <>
@@ -30,7 +31,7 @@ const TodoList = ({ todos, history }) => {
                       <TodoCard
                         onView={() => history.push({ pathname: `/todo/${todo._id}/view`, state: { isView: true } })}
                         onEdit={() => history.push({ pathname: `/todo/${todo._id}/edit`, state: { isEdit: true } })}
-                        onMark={() => console.log('**', todo)}
+                        onMark={() => { updateTodoMark({ ...todo, isDone: !todo.isDone, bucket: todo.bucketId }) }}
                         todo={todo} />
                     </div>
                   </Col>
@@ -53,4 +54,10 @@ function mapStateToProps(state) {
   return { todos };
 }
 
-export default connect(mapStateToProps)(TodoList);
+const mapDispatchToProps = (dispatch) => ({
+  updateTodoMark: (payload) => {
+    dispatch(updateTodo(payload));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

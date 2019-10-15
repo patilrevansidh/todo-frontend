@@ -1,7 +1,7 @@
 import {
   ADDING_BUCKET, ADDING_TODO, BUCKET_ADDED, FETCHING_BUCKET, FETCHING_TODOS,
   FETCH_BUCKET_FAIL, FETCH_BUCKET_SUCCESS, TODO_ADDED, TODO_ADD_FAIL, TODO_FETCH_FAIL,
-  TODO_FETCH_SUCCESS
+  TODO_FETCH_SUCCESS, UPDATING_TODO, TODO_UPDATED, TODO_UPDATE_FAIL
 } from './action/types';
 
 const initState = {
@@ -40,9 +40,17 @@ export const todoState = (state = initState, action) => {
 
     case ADDING_BUCKET:
       return { ...state, bucketLoader: true, bucketError: null };
-
     case BUCKET_ADDED:
       return { ...state, buckets: [...state.buckets, action.bucket], bucketLoader: false };
+
+    case UPDATING_TODO:
+      return { ...state, todoLoader: false };
+    case TODO_UPDATED:
+      const todos = state.todos.map(todo => {
+        if (todo._id === action.todo._id) return action.todo;
+        return todo
+      })
+      return { ...state, todos: todos, todoLoader: false };
 
     default:
       return state;
