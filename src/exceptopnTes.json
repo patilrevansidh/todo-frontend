@@ -1,0 +1,31 @@
+{
+  "productFamily": [
+    {
+      "productFamilyId": 2,
+      "productFamilyName": "Credit Card",
+      "controls": [
+        {
+          "name": "PNC Points Program Terms and Conditions as of June 18, 2017 - Basic Terms Defined\n \"basic term definitions\"",
+          "id": 5,
+          "controlId": "101",
+          "activeFlag": true,
+          "createdBy": null,
+          "controlType": "Definitions",
+          "details": "We, our, us, PNC Bank, issuer PNC Bank, National Association, which issues your Credit Card",
+          "rules": [
+            {
+              "ruleId": "100",
+              "ruleType": null,
+              "ruleDef": "rules",
+              "ruleName": "Business Options Revolve, Annual fees for netPurchases in test tier [1k, 10k)",
+              "createdBy": null,
+              "activeFlag": false,
+              "ruleDesc": "Retrieve BO Revolve that have annual fees and have net purchases within the test tier [1k, 10k)",
+              "id": "263"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

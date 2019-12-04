@@ -1,0 +1,11 @@
+{
+  "productExceptions": [
+    {
+      "id": 109,
+      "ruleId": "CB-13.12",
+      "controlId": "CB-13.1",
+      "jsonData": "{\"originalAccountNumber\":\"4690830013081606\",\"productType\":\"191\",\"currentStatus\":null,\"netPurchases\":[{\"asOfDate\":\"Fri May 03 00:00:00 EDT 2019\",\"amount\":95986.97000000007}],\"transactions\":[{\"amount\":500.0,\"transactionDate\":\"Fri May 03 00:00:00 EDT 2019\",\"transactionCode\":\"253\",\"annualFeeIndicator\":\"Y\"}]}",
+      "exceptionDateTime": "2019-12-02 13:12:16.0"
+    }
+  ]
+}

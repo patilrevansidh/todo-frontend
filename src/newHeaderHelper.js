@@ -70,25 +70,27 @@ function isSimpleValue(cellValue) {
   if (cellType === 'string' && !isJson(cellValue)) return true
   return false
 }
+
 export function getTestHeaders(obj) {
   const headers = [];
   Object.keys(obj).forEach(objKey => {
     const cellValue = obj[objKey];
     const cellType = typeof cellValue;
     if (isSimpleValue(cellValue)) {
-      headers.push({header:objKey})
+      headers.push({ header: objKey })
     }
     if (Array.isArray(cellValue) && cellValue.length > 0) {
       const subHeaders = getSubHeaders(cellValue);
-      headers.push({ header: objKey, subHeaders:subHeaders })
+      headers.push({ header: objKey, subHeaders: subHeaders })
     } else if (cellType === 'object' && cellValue && Object.keys(cellValue)) {
       const sbHeaders = getKeys(cellValue);
-      headers.push({header: objKey})
+      headers.push({ header: objKey })
     }
   })
   return headers;
 
 }
+
 export function getAggridTestHeader(header = []) {
   var agHeader = [];
   header.forEach(h => {
@@ -103,50 +105,75 @@ export function getAggridTestHeader(header = []) {
           floatingFilterComponent: "partialMatchFilter"
         });
       }
-      if (h.subHeaders && Array.isArray(h.subHeaders)) {
-        const headerTitle = getcamelCasetoTitle(h.header);
+      if (h.subHeaders && h.subHeaders.length > 0) {
+        const title = getcamelCasetoTitle(h.header);
         const children = getAggridTestHeader(h.subHeaders)
-        return {
-          headerName:headerTitle,
-          children: children
-        }
-        // var children = h.subHeaders.map(sbH => {
-        //   let headerName = typeof sbH =='string' &&getcamelCasetoTitle(sbH);
-        //   if (!sbH.subHeaders) {
-        //     const child = {
-        //       headerName,
-        //       field: sbH,
-        //       resizable: true,
-        //       sortable: true,
-        //       filter: "agTextColumnFilter",
-        //       floatingFilterComponent: "partialMatchFilter"
-        //     };
-        //     return child;
-        //   }
-        //   if(sbH.subHeaders){
-        //     const nested = getAggridTestHeader(sbH.subHeaders)
-        //     return {
-        //       headerName,
-
-        //     }
-        //   }
-        // });
-        // agHeader.push({ headerName: headerTitle, children: children });
+        agHeader.push({
+          headerName: title,
+          field: h.header,
+          children,
+          sortable: true,
+          filter: "agTextColumnFilter",
+          floatingFilterComponent: "partialMatchFilter"
+        });
       }
-    } else if (Array.isArray(h)) {
-      // var subHeader = getAggridTestHeader(h);
-      // agHeader.push(...subHeader);
     }
   });
   return agHeader;
 }
 
+function getSubHeader(subHeaders=[]){
+  const children = getAggridTestHeader(subHeaders);
+  return children;
+}
+
 function getcamelCasetoTitle(text = "") {
-  if(typeof text !=='string') console.log(text);
+  if (typeof text !== 'string') console.log(text);
   return (
     text
       .replace(/([a-z])([A-Z][a-z])/g, "$1 $2")
       .charAt(0)
       .toUpperCase() + text.slice(1).replace(/([a-z])([A-Z][a-z])/g, "$1 $2")
   );
+}
+
+;
+function getExeceptionRowsSingleRecord(data) {
+  const repeatingValues = {};
+  const repeatingRows = []
+  let hasNestedObject = false;
+  Object.keys(data).forEach(key => {
+    let cellValue = data[key];
+    let cellType = typeof data[key];
+    const isJsonString = cellType == "string" && isJson(cellValue)
+    if(isJsonString){
+      cellValue = JSON.parse(cellValue)
+      cellType = typeof cellValue;
+    }
+    if ((cellType === "number" || cellType === "string" || cellValue == null || cellValue =='null') && !isJsonString) {
+      repeatingValues[key] = cellValue;
+    }
+    if(Array.isArray(cellValue)){
+      cellValue.forEach(cell=>{
+        hasNestedObject = true;
+        const nonReaptRow = getExeceptionRowsSingleRecord(cell);
+        nonReaptRow.forEach(item=>{
+          repeatingRows.push({...repeatingValues, ...item})
+        })
+      })
+    }
+  });
+  if (!hasNestedObject) {
+    return [repeatingValues];
+  }
+  return repeatingRows;
+}
+
+export function getExceptionRows(data = []) {
+  let rowsData = [];
+  data.forEach(d => {
+    const singleObjectRows = getExeceptionRowsSingleRecord(d);
+    rowsData = [...rowsData, ...singleObjectRows];
+  });
+  return rowsData;
 }
